@@ -4,10 +4,11 @@ import { Context } from "../store/appContext";
 
 
 export const Navbar = () => {
-	const {store} = useContext(Context)
+	const {store, actions} = useContext(Context)
 	
   const handleRemoveFavorite = (event, message) => {
     event.stopPropagation(); 
+    console.log(message)
     actions.RemoveFavorite(message);
   };
   

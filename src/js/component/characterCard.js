@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import "../../styles/home.css";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
@@ -6,6 +6,20 @@ import { Link } from "react-router-dom";
 
 const CharacterCard = (props) => {
 	const {store, actions} = useContext(Context)
+	const[fetchCharacter, setFetchCharacter] = useState()
+
+	const getCharacter = (uid) => {
+		fetch(`https://www.swapi.tech/api/people/${uid}`)
+			.then(res => res.json())
+			.then((response) =>{
+				setFetchCharacter(response.result.properties)
+			});
+	}
+
+	useEffect(() => {
+        getCharacter(props.character.uid);
+    }, []);
+	
 
 	return ( 	
 		<div className="card">
@@ -13,9 +27,9 @@ const CharacterCard = (props) => {
 			<div className="card-body">
 				<h5 className="card-title">{props.character.name}</h5>
 				<div className= "text-start">
-                    <p>Gender: {props.character.gender}</p>
-                    <p>Hair color: {props.character.hair_color}</p>
-					<p>Eye color: {props.character.eye_color}</p>
+                    <p>Gender: {fetchCharacter && fetchCharacter.gender} </p>
+                    <p>Hair color: {fetchCharacter && fetchCharacter.hair_color}</p>
+					<p>Eye color: {fetchCharacter && fetchCharacter.eye_color}</p>
 				</div>
 					<Link 
 						to={`/character/${props.character.uid}`}

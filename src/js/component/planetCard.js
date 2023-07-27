@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import "../../styles/home.css";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
@@ -6,6 +6,19 @@ import { Link } from "react-router-dom";
 
 const PlanetCard = (props) => {
     const {store, actions} = useContext(Context)
+    const[fetchPlanet, setFetchPlanet] = useState()
+    
+    const getPlanet = (uid) => {
+        fetch(`https://www.swapi.tech/api/planets/${uid}`)
+            .then(res => res.json())
+            .then((response) =>{
+                setFetchPlanet(response.result.properties)
+            });
+    }
+
+    useEffect(() => {
+        getPlanet(props.planet.uid);
+    }, []);
 
     return (
         <div className="card">
@@ -13,8 +26,8 @@ const PlanetCard = (props) => {
             <div className="card-body">
                 <h5 className="card-title">{props.planet.name}</h5>
                 <div className= "text-start">
-                    <p>Population: {props.planet.population}</p>
-                    <p>Terrain: {props.planet.terrain}</p>
+                    <p>Population: {fetchPlanet && fetchPlanet.population}</p>
+                    <p>Terrain: {fetchPlanet && fetchPlanet.terrain}</p>
 						
 				</div>
                 <Link 

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import "../../styles/home.css";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
@@ -6,6 +6,19 @@ import { Link } from "react-router-dom";
 
 const VehicleCard = (props) => {
     const {store, actions} = useContext(Context)
+    const[fetchVehicle, setFetchVehicle] = useState()
+
+    const getVehicle = (uid) => {
+        fetch(`https://www.swapi.tech/api/vehicles/${uid}`)
+            .then(res => res.json())
+            .then((response) =>{
+                setFetchVehicle(response.result.properties)
+            });
+    }
+
+    useEffect(() => {
+        getVehicle(props.vehicle.uid);
+    }, []);
 
     return(
         <div className="card">
@@ -13,8 +26,8 @@ const VehicleCard = (props) => {
         <div className="card-body">
             <h5 className="card-title">{props.vehicle.name}</h5>
                 <div className= "text-start">
-                    <p>Crew: {props.vehicle.crew}</p>
-                    <p>Passanger: {props.vehicle.passanger}</p>
+                    <p>Crew: {fetchVehicle && fetchVehicle.crew}</p>
+                    <p>Model: {fetchVehicle && fetchVehicle.model}</p>
 						
 				</div>
                 <Link 
